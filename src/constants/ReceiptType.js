@@ -1,0 +1,2 @@
+export const FETCH_RECEIPT = 'FETCH_RECEIPT';
+export const ADD_RECEIPT = 'ADD_RECEIPT';
