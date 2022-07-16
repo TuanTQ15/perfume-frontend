@@ -23,6 +23,7 @@ function SideBar() {
 
             {/* <!-- Nav Item - Dashboard --> */}
             <li className="nav-item">
+             
                 <Link to="/" className="nav-link" >
                     <i className="fas fa-list"></i>
                     <span>Sản phẩm</span>
@@ -40,7 +41,7 @@ function SideBar() {
 
             {/* <!-- Heading --> */}
             <div className="sidebar-heading">
-                People
+                Nhân Sự
             </div>
             <li className="nav-item">
                 <Link className="nav-link" to="/employee">

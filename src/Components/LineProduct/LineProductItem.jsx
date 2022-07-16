@@ -39,7 +39,7 @@ export const LineProductItem = ({ item, onDeleteLineProduct }) => {
             {/* <td>{item.sex === 1 ? "Nam" : item.sex === 2 ? "Nữ" : "Unisex"}</td> */}
             <td>{item.quantityInStock}</td>
             <td><NumberFormat value={item.price} suffix={'đ'} thousandSeparator={true} displayType={'text'}/></td>
-            <td>{item.category.categoryName}</td>
+            <td>{item.capacity}</td>
             <td>{item.brand.brandName}</td>
             <td>
                 <Link to={`/editlineproduct/${item.productId}`}>

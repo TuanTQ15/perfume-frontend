@@ -116,22 +116,12 @@ const LineProductList = ({ products, onFetchProduct, lineProduct, onFetchLinePro
                                     <th className="col-md-4">Tên</th>
                                     <th className="col-sm-1">Số lượng tồn</th>
                                     <th className="col-md-1">Giá</th>
-                                    <th className="col-md-2">Danh mục</th>
+                                    <th className="col-md-2">Dung tích</th>
                                     <th className="col-md-1">Hãng</th>
                                     <th className="col-md-1">Action</th>
                                 </tr>
                             </thead>
-                            <tfoot>
-                                <tr>
-                                    <th className="col-md-1">Mã SP</th>
-                                    <th className="col-md-4">Tên</th>
-                                    <th className="col-sm-1">Số lượng tồn</th>
-                                    <th className="col-md-1">Giá</th>
-                                    <th className="col-md-2">Danh mục</th>
-                                    <th className="col-md-1">Hãng</th>
-                                    <th className="col-md-1">Action</th>
-                                </tr>
-                            </tfoot>
+                            
                             <tbody>
                                 {lineProductList}
                             </tbody>

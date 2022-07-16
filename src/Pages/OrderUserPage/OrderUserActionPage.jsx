@@ -44,7 +44,7 @@ export const OrderUserActionPage = ({ match, handleUpdateOrder }) => {
 
     useEffect(() => {
         (async () => {
-            var data = await callApi(`OrderUser/${match.params.id}`, 'GET', null, `Bearer ${getTokenEmployee()}`).then(res => {
+            var data = await callApi(`orderUser/${match.params.id}`, 'GET', null, `Bearer ${getTokenEmployee()}`).then(res => {
                 return res.data
             });
             var nv = getNV(history);

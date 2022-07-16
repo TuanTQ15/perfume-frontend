@@ -16,7 +16,8 @@ export const ProductList = (props) => {
         if (value === null || value === undefined) return list
         else {
             list = list.filter(params => {
-                return params.MA_SP.toLowerCase().indexOf(value.toLowerCase()) !== -1 || params.DUNGTICH.toLowerCase().indexOf(value.toLowerCase()) !== -1;
+                
+                return params.productId.toLowerCase().indexOf(value.toLowerCase()) !== -1 || params.capacity.toLowerCase().indexOf(value.toLowerCase()) !== -1;
             })
             return list
         }
@@ -41,7 +42,7 @@ export const ProductList = (props) => {
         return null
     })
 
-    console.log(products)
+    
     return (
         <div className="container-fluid">
 

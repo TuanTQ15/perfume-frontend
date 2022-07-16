@@ -9,7 +9,7 @@ const MySwal = withReactContent(Swal)
 
 export const actFetchProductsRequest = () => {
     return async (dispatch) => {
-        return await callApi('Perfume', 'GET', null, `Bearer ${getTokenEmployee()}`).then(res => {
+        return await callApi('product', 'GET', null, `Bearer ${getTokenEmployee()}`).then(res => {
             dispatch(actFetchProducts(res.data));
         });
     }
@@ -24,7 +24,7 @@ export const actFetchProducts = (product) => {
 
 export const actAddProductRequest = (product, history) => {
     return async (dispatch) => {
-        return await callApi('Perfume', 'POST', product, `Bearer ${getTokenEmployee()}`).then(res => {
+        return await callApi('product', 'POST', product, `Bearer ${getTokenEmployee()}`).then(res => {
             if (res.data.result === 1) {
                 MySwal.fire({
                     icon: 'success',
@@ -48,7 +48,7 @@ export const actAddProductRequest = (product, history) => {
 
 export const actUpdateProductRequest = (product, history) => {
     return async (dispatch) => {
-        return await callApi(`Perfume`, 'PUT', product, `Bearer ${getTokenEmployee()}`).then(res => {
+        return await callApi(`product`, 'PUT', product, `Bearer ${getTokenEmployee()}`).then(res => {
             if (res.data.result === 1) {
                 MySwal.fire({
                     icon: 'success',
@@ -71,7 +71,7 @@ export const actUpdateProductRequest = (product, history) => {
 
 export const actDeleteProductRequest = (MA_SP) => {
     return async (dispatch) => {
-        return await callApi(`/Perfume/${MA_SP}`, 'DELETE', null, `Bearer ${getTokenEmployee()}`).then(res => {
+        return await callApi(`/product/${MA_SP}`, 'DELETE', null, `Bearer ${getTokenEmployee()}`).then(res => {
             if (res.data.result === 1) {
                 MySwal.fire({
                     icon: 'success',
