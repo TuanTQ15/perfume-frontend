@@ -7,7 +7,9 @@ import callApiForPaypalGetToken from '../utils/apiCallerGettoken';
 export const actFetchOrderReq = (status) => {
     return async (dispatch) => {
         return await callApi(`order?status=${status}`, 'GET', null, `Bearer ${getTokenEmployee()}`).then(res => {
-            dispatch(actFetchOrder(res.data, status));
+            if (res != null) {
+                dispatch(actFetchOrder(res.data, status));
+            }
         });
     }
 }
@@ -51,9 +53,12 @@ export const actUpdateStatusReq = (itemUpdate, status, transactionID) => {
             }
         }
         return await callApi(`order?isUpdateStatus=${true}`, 'PUT', itemUpdate, `Bearer ${getTokenEmployee()}`).then(res => {
-            if (res.data.result)
-                dispatch(actUpdateStatus(itemUpdate, status))
-            return res.data
+            if (res != null) {
+                if (res.data.result)
+                    dispatch(actUpdateStatus(itemUpdate, status))
+                return res.data
+            }
+
         });
     }
 }
@@ -75,7 +80,10 @@ export const actRefundPaypal = (transactionID, access_token) => {
 export const actUpdateNgayGiaoReq = (order) => {
     return async () => {// chỉ cập nhật ngày giao nên truyền update status false
         return await callApi(`order?isUpdateStatus=${false}`, 'PUT', order, `Bearer ${getTokenEmployee()}`).then(res => {
-            return res.data
+            if (res != null) {
+                return res.data
+            }
+            
         });
     }
 }

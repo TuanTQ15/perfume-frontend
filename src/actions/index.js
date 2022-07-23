@@ -6,7 +6,9 @@ import { getTokenEmployee } from './getNV';
 export const actFetchLineProductsRequest = () => {
     return async (dispatch) => {
         return await callApi('product', 'GET', null, `Bearer ${getTokenEmployee()}`).then(res => {
-            dispatch(actFetchLineProducts(res.data));
+            if(res!=null){
+                dispatch(actFetchLineProducts(res.data));
+            }
         });
     }
 }
@@ -25,7 +27,9 @@ export const actAddLineProductRequest = (lineProduct) => {
     }
     return async () => {
         return await callApi('product', 'POST', lineProduct, `Bearer ${getTokenEmployee()}`).then(res => {
-            return res.data
+            if(res!=null){
+                return res.data
+            }
         });
     }
 }
@@ -42,8 +46,10 @@ export const actUpdateLineProductRequest = (lineProduct) => {
     }
     return async () => {
         return await callApi(`product`, 'PUT', lineProduct, `Bearer ${getTokenEmployee()}`).then(res => {
-            console.log(res)
-            return res.data
+            if (res != null) {
+                return res.data
+            }
+
         });
     }
 }
@@ -51,8 +57,11 @@ export const actUpdateLineProductRequest = (lineProduct) => {
 export const actDeleteLineProductRequest = (MA_DSP) => {
     return async (dispatch) => {
         return callApi(`product/${MA_DSP}`, 'DELETE', null, `Bearer ${getTokenEmployee()}`).then(res => {
-            if(res.data.result === true) dispatch(actDeleteLineProduct(MA_DSP));
-            return res.data
+
+            if (res != null) {
+                if (res.data.result === true) dispatch(actDeleteLineProduct(MA_DSP));
+                return res.data
+            }
         });
     }
 }
@@ -65,8 +74,10 @@ export const actDeleteLineProduct = (MA_DSP) => {
 
 export const actDeleteProductRequest = (MA_SP) => {
     return async () => {
-        return await callApi(`Perfume/${MA_SP}`, 'DELETE', MA_SP, `Bearer ${getTokenEmployee()}`).then(res => {
-            return res.data
+        return await callApi(`product/${MA_SP}`, 'DELETE', MA_SP, `Bearer ${getTokenEmployee()}`).then(res => {
+            if (res != null) {
+                return res.data
+            }
         });
     }
 }

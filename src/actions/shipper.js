@@ -7,7 +7,9 @@ import { getTokenEmployee } from './getNV';
 export const actFetchshipperReq = () => {
     return async (dispatch) => {
         return await callApi('shipper', 'GET', null, `Bearer ${getTokenEmployee()}`).then(res => {
-            dispatch(actFetchshipper(res.data));
+            if (res != null) {
+                dispatch(actFetchshipper(res.data));
+            }
         });
     }
 }
@@ -23,7 +25,10 @@ export const actFetchshipper = (shipper) => {
 export const actAddShipperRequest = (Shipper) => {
     return async () => {
         return await callApi('shipper', 'POST', Shipper, `Bearer ${getTokenEmployee()}`).then(res => {
-            return res.data
+            if (res != null) {
+                return res.data
+            }
+
         });
     }
 }
@@ -31,7 +36,9 @@ export const actAddShipperRequest = (Shipper) => {
 export const actUpdateShipperRequest = (Shipper, history) => {
     return async () => {
         return await callApi(`shipper`, 'PUT', Shipper, `Bearer ${getTokenEmployee()}`).then(res => {
-            return res.data
+            if (res != null) {
+                return res.data
+            }
         });
     }
 }
@@ -39,10 +46,13 @@ export const actUpdateShipperRequest = (Shipper, history) => {
 export const actDeleteShipperRequest = (shipperId) => {
     return async (dispatch) => {
         return await callApi(`shipper/${shipperId}`, 'DELETE', null, `Bearer ${getTokenEmployee()}`).then(res => {
-            if (res.data.result) {
-                dispatch(actDeleteShipper(shipperId));
+
+            if (res != null) {
+                if (res.data.result) {
+                    dispatch(actDeleteShipper(shipperId));
+                }
+                return res.data
             }
-            return res.data
         });
     }
 }

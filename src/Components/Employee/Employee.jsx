@@ -106,17 +106,7 @@ export const ProductList = ({ employee, onFetchEmployee }) => {
                                     <th className="col-md-1">Action</th>
                                 </tr>
                             </thead>
-                            <tfoot>
-                                <tr>
-                                    <th className="col-md-1">Mã NV</th>
-                                    <th className="col-md-2">Họ và tên</th>
-                                    <th className="col-md-2">Ngày sinh</th>
-                                    <th className="col-md-2">Địa chỉ</th>
-                                    <th className="col-md-1">Số điện thoại</th>
-                                    <th className="col-md-3">Email</th>
-                                    <th className="col-md-1">Action</th>
-                                </tr>
-                            </tfoot>
+                           
                             <tbody>
                                 {productList}
                             </tbody>

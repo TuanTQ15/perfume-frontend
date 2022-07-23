@@ -103,15 +103,7 @@ const OrderSupply = ({onFetchReceipt,receipt}) => {
                                     <th className="col-md-1">Action</th>
                                 </tr>
                             </thead>
-                            <tfoot>
-                                <tr>
-                                    <th className="col-md-2">Mã Phiếu nhập</th>
-                                    <th className="col-md-3">Ngày Tạo</th>
-                                    <th className="col-md-2">Mã nhân viên</th>
-                                    <th className="col-md-2">Mã đơn đặt hàng</th>
-                                    <th className="col-md-1">Action</th>
-                                </tr>
-                            </tfoot>
+                            
                             <tbody>
                                 {orderSupplyList}
                             </tbody>

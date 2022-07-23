@@ -8,8 +8,11 @@ const products = (state = initialState, action) => {
     if (action.type === Types.FETCH_PRODUCTS) {
         return [...action.product];
     }
+    if (action.type === Types.FETCH_PRODUCTS_SEARCH) {
+        return [...action.product];
+    }
     else if (action.type === Types.DELETE_PRODUCT) {
-        let index = state.findIndex(x=> x.MA_SP === action.MA_SP);
+        let index = state.findIndex(x => x.MA_SP === action.MA_SP);
         state.splice(index, 1);
         return [...state];
     }

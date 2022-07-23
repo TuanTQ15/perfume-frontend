@@ -11,7 +11,10 @@ export const actFetchOrderSupplysRequest = () => {
     return async (dispatch) => {
         return await callApi('os', 'GET', null, `Bearer ${getTokenEmployee()}`)
             .then(res => {
-                dispatch(actFetchOrderSupplys(res.data));
+                if (res != null) {
+                    dispatch(actFetchOrderSupplys(res.data));
+                }
+                
             });
     }
 }
@@ -27,7 +30,10 @@ export const actAddOrderSupplyRequest = (orderSupply, history) => {
     return async (dispatch) => {
         return await callApi('os', 'POST', orderSupply, `Bearer ${getTokenEmployee()}`)
             .then(res => {
-                return res.data
+                if (res != null) {
+                    return res.data
+                }
+                
             });
     }
 }
@@ -39,7 +45,10 @@ export const actUpdateOrderSupplyRequest = (orderSupply, history, updateStatus) 
                 if (updateStatus) {
                     dispatch(actUpdatOrderSupply(orderSupply))
                 }
-                return res.data
+                if (res != null) {
+                    return res.data
+                }
+                
             });
     }
 }

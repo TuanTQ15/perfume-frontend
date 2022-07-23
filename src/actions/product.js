@@ -15,12 +15,35 @@ export const actFetchProductsRequest = () => {
     }
 }
 
+
+export const actFetchProductsSearchReq = () => {
+    return async (dispatch) => {
+        return await callApi('product/search', 'GET', null, `Bearer ${getTokenEmployee()}`).then(res => {
+            if(res!=null){
+                dispatch(actFetchProductsSearch(res.data));
+            }
+        });
+    }
+}
+
+export const actFetchProductsSearch = (product) => {
+    return {
+        type: Types.FETCH_PRODUCTS_SEARCH,
+        product
+    }
+}
+
+
+
+
 export const actFetchProducts = (product) => {
     return {
         type: Types.FETCH_PRODUCTS,
         product
     }
 }
+
+
 
 export const actAddProductRequest = (product, history) => {
     return async (dispatch) => {

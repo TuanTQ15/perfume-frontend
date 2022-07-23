@@ -45,7 +45,9 @@ export const OrderUserActionPage = ({ match, handleUpdateOrder }) => {
     useEffect(() => {
         (async () => {
             var data = await callApi(`orderUser/${match.params.id}`, 'GET', null, `Bearer ${getTokenEmployee()}`).then(res => {
-                return res.data
+                if(res !=null){
+                    return res.data
+                }
             });
             var nv = getNV(history);
             if (data !== undefined && nv != null) {
@@ -109,7 +111,7 @@ export const OrderUserActionPage = ({ match, handleUpdateOrder }) => {
 
                         <form onSubmit={e => handleSubmit(e)}>
                             <div className="form-group">
-                                <label className="control-label" htmlFor="MA_DSP">ID Phiếu đặt </label>
+                                <label className="control-label" htmlFor="MA_DSP">Mã Phiếu đặt </label>
                                 <input id="ID_PHIEUDAT" value={value.ID_PHIEUDAT}
                                     onChange={e => setValue({ ...value, ID_PHIEUDAT: e.target.value })}
                                     placeholder="ID Phiếu đặt" className="form-control input-md" type="text"
@@ -126,23 +128,9 @@ export const OrderUserActionPage = ({ match, handleUpdateOrder }) => {
                                 <small className="form-text text-danger">{validationMsg.HOTEN}</small>
                             </div>
 
-                            <div className="form-group">
-                                <label className="control-label" htmlFor="HOTEN">Họ và tên</label>
-                                <input id="HOTEN" value={value.DIACHI}
-                                    onChange={e => setValue({ ...value, DIACHI: e.target.value })}
-                                    className="form-control input-md" type="text"
-                                    placeholder="Họ và tên"
-                                    readOnly />
+                           
 
-                            </div>
-
-                            <div className="form-group">
-                                <label className="control-label" htmlFor="HOTEN">Họ và tên</label>
-                                <input id="HOTEN" value={value.SODIENTHOAI}
-                                    onChange={e => setValue({ ...value, SODIENTHOAI: e.target.value })}
-                                    className="form-control input-md" type="text"
-                                    placeholder="Họ và tên" readOnly />
-                            </div>
+                         
 
                             <div className="form-group">
                                 <label className=" control-label" htmlFor="NVGH">Ngày đặt</label>

@@ -65,7 +65,9 @@ export const EmployeeActionPage = ({ match, onUpdateEmployee, history, onAddempl
         if (getAge(employee.dateOfBirth) < 18) {
             msg.dateOfBirth = "Nhân viên cần trên 18 tuổi"
         }
-
+        if(isEmpty(employee.phoneNumber)){
+            msg.phoneNumber="Số điện thoại không được để trống"
+        }
         if (isEmpty(employee.email)) {
             msg.email = "Trường này không được để trống"
         } else if (!isemail(employee.email)) {

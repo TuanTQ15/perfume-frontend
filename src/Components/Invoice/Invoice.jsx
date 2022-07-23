@@ -105,18 +105,7 @@ const OrderSupply = ({ onFetchInvoice, invoice }) => {
                                     <th className="col-md-1">Action</th>
                                 </tr>
                             </thead>
-                            <tfoot>
-                                <tr>
-                                    <th className="col-md-1">Mã Hóa đơn</th>
-                                    <th className="col-md-2">Ngày Tạo</th>
-                                    <th className="col-md-2">Tổng tiền</th>
-                                    <th className="col-md-2">Mã số thuế</th>
-                                    <th className="col-md-1">ID Phiếu đặt</th>
-                                    <th className="col-md-1">Mã nhân viên</th>
-                                    <th className="col-md-2">Mã nhân viên giao hàng</th>
-                                    <th className="col-md-1">Action</th>
-                                </tr>
-                            </tfoot>
+                            
                             <tbody>
                                 {orderSupplyList}
                             </tbody>

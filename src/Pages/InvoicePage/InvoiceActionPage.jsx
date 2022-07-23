@@ -130,7 +130,7 @@ export const InvoiceActionPage = ({ match, onFetchShipper, shipper, history, onA
                                 <small className="form-text text-danger">{validationMsg.invoiceId}</small>
                             </div> */}
                             <div className="form-group">
-                                <label className="control-label" htmlFor="orderId">ID Phiếu Đặt(<small className="text-danger">*</small>)</label>
+                                <label className="control-label" htmlFor="orderId">Mã Phiếu Đặt(<small className="text-danger">*</small>)</label>
                                 <input id="orderId" value={invoice.orderId} className="form-control input-md" readOnly type="text" />
                             </div>
 

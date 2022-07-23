@@ -161,7 +161,7 @@ export const LineProductActionPage = ({ category, brand, match, onFetchBrand, on
       // console.log(res);
       if (checkAdd) {
         let res = await onAddLineProduct(value)
-        if (res.result) {
+        if (res&&res.result) {
           MySwal.fire({
             icon: 'success',
             title: res.message,
@@ -175,13 +175,13 @@ export const LineProductActionPage = ({ category, brand, match, onFetchBrand, on
           MySwal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: res.message
+            text: res?res.message:"Thêm sản phẩm thất bại"
           })
         }
       }
       else {
         let res = await onUpdateLineProduct(value, history)
-        if (res.result) {
+        if (res&&res.result) {
           MySwal.fire({
             icon: 'success',
             title: res.message,
@@ -195,7 +195,7 @@ export const LineProductActionPage = ({ category, brand, match, onFetchBrand, on
           MySwal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: res.message
+            text: res?res.message:"Cập nhật thông tin sản phẩm thất bại"
           })
         }
       }

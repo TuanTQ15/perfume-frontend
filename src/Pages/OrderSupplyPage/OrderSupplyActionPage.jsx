@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { connect } from 'react-redux'
 import SideBar from '../../Components/Bar/SideBar'
 import TopBar from '../../Components/Bar/TopBar'
@@ -14,16 +14,18 @@ import { actAddOrderSupplyRequest, actDeleteDetailOrderSupplyRequest, actUpdateO
 import { getNV, getTokenEmployee } from '../../actions/getNV'
 import { v4 as uuidv4 } from 'uuid'
 import NumberFormat from 'react-number-format'
-
+import { actFetchProductsSearchReq } from '../../actions/product'
+import CustomSelect from './CustomSelect';
 const MySwal = withReactContent(Swal)
 
 
-export const ProductActionPage = ({ match, brand, onAddOrderSupply, onUpdateOrderSupply, history, onFetchBrand, onDeteleDetail }) => {
+export const ProductActionPage = ({ match, brand, onAddOrderSupply, onUpdateOrderSupply, history, onFetchBrand, onDeteleDetail, onFetchProductSearch, products }) => {
   const [checkAdd, setcheckAdd] = useState(true)
 
   const [detail, setDetail] = useState(null)
   const [validationMsg, setvalidationMsg] = useState('')
   const [validationMsgdetailOSList, setvalidationMsgdetailOSList] = useState([])
+  const [valid,setValid]=useState(null)
   const [value, setValue] = useState({
     orderSupplyId: '',
     bookingDate: new Date(),
@@ -41,6 +43,8 @@ export const ProductActionPage = ({ match, brand, onAddOrderSupply, onUpdateOrde
       }
     ]
   })
+
+
   const validateAll = () => {
     const msg = {}
     const msgdetailOSList = []
@@ -69,8 +73,8 @@ export const ProductActionPage = ({ match, brand, onAddOrderSupply, onUpdateOrde
       } else if (element.quantity <= 0) {
         validateDetailPromotion.quantity = "Số lượng phải lớn hơn 0"
       }
-
-      if (isEmpty(element.price.toString())) {
+     
+      if (element.price.toString()==="NaN") {
         validateDetailPromotion.price = "Trường này không được để trống"
       } else if (element.price <= 0) {
         validateDetailPromotion.price = "Giá phải lớn hơn 0"
@@ -86,9 +90,20 @@ export const ProductActionPage = ({ match, brand, onAddOrderSupply, onUpdateOrde
     return true
   }
 
+  // useEffect(() => {
+  //   async function fetchAPI() {
+
+  //   }
+  //   fetchAPI()
+  // }, [])
+
+
   useEffect(() => {
+
     async function fetchAPI() {
       await onFetchBrand()
+      await onFetchProductSearch()
+
       if (match === undefined) {
         setcheckAdd(true)
         setValue({
@@ -102,10 +117,10 @@ export const ProductActionPage = ({ match, brand, onAddOrderSupply, onUpdateOrde
           return res.data
         });
         // setDetail(orderSupplyDetail)
-        setDetail(()=>{
+        setDetail(() => {
           let object = orderSupplyDetail
           //truyền thêm field id để validation
-          object.detailOSList.forEach((ele,index)=>{
+          object.detailOSList.forEach((ele, index) => {
             ele.id = index
           })
           return object
@@ -124,10 +139,12 @@ export const ProductActionPage = ({ match, brand, onAddOrderSupply, onUpdateOrde
         ...detail,
         receivedDate: new Date(detail.receivedDate)
       })
+      
       // detailOSList có thêm field id để validate và đc thêm sẵn trong api
     }// eslint-disable-next-line
   }, [detail])
 
+ 
   useEffect(() => {
     if (brand.length !== 0) {
       setValue({
@@ -139,7 +156,10 @@ export const ProductActionPage = ({ match, brand, onAddOrderSupply, onUpdateOrde
   function handleChangedetailOSList(e, id) {
     var CT_Update = value.detailOSList.find(detailOSList => detailOSList.id === id)
 
-    if (e.target.name === "productId") CT_Update.productId = e.target.value
+    if (e.target.name === "productId") {
+      CT_Update.productId = e.target.value
+
+    }
     else if (e.target.name === "quantity") CT_Update.quantity = e.target.value
     else CT_Update.price = e.target.value
     setValue({
@@ -175,7 +195,7 @@ export const ProductActionPage = ({ match, brand, onAddOrderSupply, onUpdateOrde
       }
     }
   }
-
+  
   async function handleSubmit(e) {
     e.preventDefault()
     const uniqueValues = new Set(value.detailOSList.map(v => v.productId));
@@ -193,11 +213,12 @@ export const ProductActionPage = ({ match, brand, onAddOrderSupply, onUpdateOrde
         sp.price = price
       }
     })
-    console.log(value);
+   
 
     const isValid = validateAll()
     //validate
-    console.log();
+    setValid(isValid)
+    
     if (isValid) {
       if (checkAdd) {
         if (value.detailOSList.length === 0) {
@@ -211,21 +232,21 @@ export const ProductActionPage = ({ match, brand, onAddOrderSupply, onUpdateOrde
         let res = await onAddOrderSupply(value, history)
         if (res.result) {
           MySwal.fire({
-              icon: 'success',
-              title: res.message,
-              showConfirmButton: false,
-              timer: 1500
+            icon: 'success',
+            title: res.message,
+            showConfirmButton: false,
+            timer: 1500
           })
           // dispatch(actAddLineorderSupply(res.data));
           history.goBack()
-      }
-      else {
+        }
+        else {
           MySwal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: res.message
+            icon: 'error',
+            title: 'Oops...',
+            text: res.message
           })
-      }
+        }
       }
       else {
         let res = await onUpdateOrderSupply(value, history, false)
@@ -247,7 +268,7 @@ export const ProductActionPage = ({ match, brand, onAddOrderSupply, onUpdateOrde
         }
       }
     }
-
+    
   }
   function handleAddDetailDDH(e) {
     setValue({
@@ -264,6 +285,110 @@ export const ProductActionPage = ({ match, brand, onAddOrderSupply, onUpdateOrde
       ]
     })
   }
+  const [data, setData] = useState([])
+  useEffect(() => {
+    let dataChange = []
+    for (let i = 0; i < products.length; i++) {
+      dataChange.push(products[i].id + " - " + products[i].name)
+      setData(dataChange)
+    }
+
+  }, [products])
+
+  const changeHandler = (valueSelected, idOld) => {
+    
+    const id=valueSelected.split("-") 
+  
+    var CT_Update = value.detailOSList.find(detailOSList => detailOSList.id === idOld)
+    CT_Update.productId =  Number(id[0].trim())
+    
+  }
+  
+  const detailList = useMemo(() => {
+    setValid(true)
+    return (
+      value.detailOSList.map((ct) => {
+        let index = validationMsgdetailOSList.findIndex(x => x.id === ct.id)
+        let productIndex = products.findIndex(product => product.id===ct.productId)
+       
+        return <div key={ct.id} className="row" style={{ marginBottom: 15 }}>
+          <div className="col">
+            {/* <select className="form-control" data-live-search="true"
+              value={ct.productId}
+              onChange={e => handleChangedetailOSList(e, ct.id)}
+              name="productId"
+              disabled={checkAdd ? false : (ct.checkForAdd === true ? false : true)}
+            >
+              {products && products.map((pro, index) => {
+                return <option key={index} value={pro.id}>{pro.name.trim()} - {pro.id}</option>
+              })}
+
+            </select> */}
+            <CustomSelect
+                disabled={checkAdd ? false : (ct.checkForAdd === true ? false : true)}
+                value={data[productIndex]}
+                searchPlaceholder="Search"
+                onChange={changeHandler}
+                data={data}
+                name={ct.id}
+              />
+            <small className="form-text text-danger">
+              {index === -1 ? "" : validationMsgdetailOSList[index].productId}
+            </small>
+          </div>
+
+          <div className="col">
+            <input type="number"
+              value={ct.quantity}
+              onChange={e => handleChangedetailOSList(e, ct.id)}
+              name="quantity"
+              className="form-control" placeholder="Số lượng" />
+            <small className="form-text text-danger">
+              {index === -1 ? "" : validationMsgdetailOSList[index].quantity}
+            </small>
+            {/* <small className="form-text text-danger">{validationMsgdetailOSList[ct.id] === undefined ? "" : validationMsgdetailOSList[ct.id].quantity}</small> */}
+          </div>
+          <div className="col">
+            {/* <input type="number"
+              value={ct.price}
+              onChange={e => handleChangedetailOSList(e, ct.id)}
+              name="price"
+              className="form-control" placeholder="Giá" /> */}
+            <NumberFormat value={ct.price}
+              thousandSeparator={true}
+              onChange={e => handleChangedetailOSList(e, ct.id)}
+              name="price"
+              className="form-control" placeholder="Giá" />
+            <small className="form-text text-danger">
+              {index === -1 ? "" : validationMsgdetailOSList[index].price}
+            </small>
+            {/* <small className="form-text text-danger">{validationMsgdetailOSList[ct.id] === undefined ? "" : validationMsgdetailOSList[ct.id].price}</small> */}
+          </div>
+          <div className="col">
+            <div className="">
+              <button onClick={() => handleDeletedetailOSList(ct)} type="button" className="btn btn-danger"><i className="fas fa-trash-alt"></i>&nbsp;Xóa</button>
+            </div>
+          </div>
+        </div>
+      })
+    )
+
+  }, [value, products,valid])
+
+  useEffect(() => {
+    const elements = document.querySelectorAll('.selectpicker')
+    if (elements) {
+      for (let index = 0; index < elements.length; index++) {
+        const element = elements[index];
+        if (element) {
+          // element.selectpicker();
+          console.log(element)
+        }
+      }
+    }
+  }, [detailList])
+
+
 
   return (
     <div id="wrapper">
@@ -302,6 +427,7 @@ export const ProductActionPage = ({ match, brand, onAddOrderSupply, onUpdateOrde
                 <small className="form-text text-danger">{validationMsg.receivedDate}</small>
               </div>
 
+
               <div className="form-group">
                 <label htmlFor="exampleFormControlSelect1">Hãng(<small className="text-danger">*</small>)</label>
                 <select className="form-control" id="exampleFormControlSelect1"
@@ -315,8 +441,6 @@ export const ProductActionPage = ({ match, brand, onAddOrderSupply, onUpdateOrde
                 {/* <small className="form-text text-danger">{validationMsg.MA_NVGH}</small> */}
               </div>
 
-
-
               <hr />
               <h5>Các chi tiết đơn đặt hàng</h5>
               <button onClick={e => handleAddDetailDDH(e)} type="button" className="btn btn-info d-flex" style={{ marginBottom: 10 }}>
@@ -329,56 +453,7 @@ export const ProductActionPage = ({ match, brand, onAddOrderSupply, onUpdateOrde
                 <div className="col"><label htmlFor="exampleFormControlSelect1">Action</label> </div>
               </div>
 
-              {value.detailOSList.map((ct) => {
-                let index = validationMsgdetailOSList.findIndex(x => x.id === ct.id)
-
-                return <div key={ct.id} className="row" style={{ marginBottom: 15 }}>
-                  <div className="col">
-                    <input type="text"
-                      value={ct.productId}
-                      onChange={e => handleChangedetailOSList(e, ct.id)}
-                      name="productId"
-                      disabled={checkAdd ? false : (ct.checkForAdd === true ? false : true)}
-                      className="form-control" placeholder="Mã sản phẩm" />
-                    {/* <small className="form-text text-danger">{validationMsgdetailOSList[ct.id] === undefined ? "" : validationMsgdetailOSList[ct.id].productId}</small> */}
-                    <small className="form-text text-danger">
-                      {index === -1 ? "" : validationMsgdetailOSList[index].productId}
-                    </small>
-                  </div>
-                  <div className="col">
-                    <input type="number"
-                      value={ct.quantity}
-                      onChange={e => handleChangedetailOSList(e, ct.id)}
-                      name="quantity"
-                      className="form-control" placeholder="Số lượng" />
-                    <small className="form-text text-danger">
-                      {index === -1 ? "" : validationMsgdetailOSList[index].quantity}
-                    </small>
-                    {/* <small className="form-text text-danger">{validationMsgdetailOSList[ct.id] === undefined ? "" : validationMsgdetailOSList[ct.id].quantity}</small> */}
-                  </div>
-                  <div className="col">
-                    {/* <input type="number"
-                      value={ct.price}
-                      onChange={e => handleChangedetailOSList(e, ct.id)}
-                      name="price"
-                      className="form-control" placeholder="Giá" /> */}
-                    <NumberFormat value={ct.price}
-                      thousandSeparator={true}
-                      onChange={e => handleChangedetailOSList(e, ct.id)}
-                      name="price"
-                      className="form-control" placeholder="Giá" />
-                    <small className="form-text text-danger">
-                      {index === -1 ? "" : validationMsgdetailOSList[index].price}
-                    </small>
-                    {/* <small className="form-text text-danger">{validationMsgdetailOSList[ct.id] === undefined ? "" : validationMsgdetailOSList[ct.id].price}</small> */}
-                  </div>
-                  <div className="col">
-                    <div className="">
-                      <button onClick={() => handleDeletedetailOSList(ct)} type="button" className="btn btn-danger"><i className="fas fa-trash-alt"></i>&nbsp;Xóa</button>
-                    </div>
-                  </div>
-                </div>
-              })}
+              {detailList}
               {/* </div> */}
 
 
@@ -394,7 +469,8 @@ export const ProductActionPage = ({ match, brand, onAddOrderSupply, onUpdateOrde
 }
 
 const mapStateToProps = (state) => ({
-  brand: state.brand
+  brand: state.brand,
+  products: state.products
 })
 
 const mapDispatchToProps = dispatch => {
@@ -407,6 +483,9 @@ const mapDispatchToProps = dispatch => {
     },
     onFetchBrand: () => {
       dispatch(actFetchBrandsRequest())
+    },
+    onFetchProductSearch: () => {
+      dispatch(actFetchProductsSearchReq())
     },
     onDeteleDetail: (orderSupplyId, productId) => {
       return dispatch(actDeleteDetailOrderSupplyRequest(orderSupplyId, productId))

@@ -35,26 +35,29 @@ export const actAddPromotionRequest = (Promotion, history) => {
     // }
     return async () => {
         return await callApi('promotion', 'POST', Promotion, `Bearer ${getTokenEmployee()}`).then(res => {
-            if (res.data.result) {
-                MySwal.fire({
-                    icon: 'success',
-                    title: 'Thêm khuyến mãi thành công',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-                // dispatch(actAddLinePromotion(res.data));
-                // Promotion.CT_KMs.forEach(element => {
-                //     dispatch(actAddDetailPromotionReq(element))
-                // });
-                history.goBack()
+            if(res!=null){
+                if (res.data.result) {
+                    MySwal.fire({
+                        icon: 'success',
+                        title: 'Thêm khuyến mãi thành công',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    // dispatch(actAddLinePromotion(res.data));
+                    // Promotion.CT_KMs.forEach(element => {
+                    //     dispatch(actAddDetailPromotionReq(element))
+                    // });
+                    history.goBack()
+                }
+                else {
+                    MySwal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: res.data.message
+                    })
+                }
             }
-            else {
-                MySwal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: res.data.message
-                })
-            }
+            
         });
     }
 }
@@ -70,21 +73,24 @@ export const actAddPromotionRequest = (Promotion, history) => {
 export const actUpdatePromotionRequest = (Promotion, history) => {
     return async () => {
         return await callApi(`promotion`, 'PUT', Promotion, `Bearer ${getTokenEmployee()}`).then(res => {
-            if (res.data.result) {
-                MySwal.fire({
-                    icon: 'success',
-                    title: res.data.message,
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-                history.goBack()
-            } else {
-                MySwal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: res.data.message
-                })
+            if(res!=null){
+                if (res.data.result) {
+                    MySwal.fire({
+                        icon: 'success',
+                        title: res.data.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    history.goBack()
+                } else {
+                    MySwal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: res.data.message
+                    })
+                }
             }
+           
         });
     }
 }
@@ -92,21 +98,24 @@ export const actUpdatePromotionRequest = (Promotion, history) => {
 export const actDeletePromotionRequest = (promotionId) => {
     return async (dispatch) => {
         return await callApi(`promotion/${promotionId}`, 'DELETE', null, `Bearer ${getTokenEmployee()}`).then(res => {
-            if (res.data.result) {
-                MySwal.fire({
-                    icon: 'success',
-                    title: res.data.message,
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-                dispatch(actDeletePromotion(promotionId));
-            } else {
-                MySwal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: res.data.message
-                })
+            if(res!=null){
+                if (res.data.result) {
+                    MySwal.fire({
+                        icon: 'success',
+                        title: res.data.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    dispatch(actDeletePromotion(promotionId));
+                } else {
+                    MySwal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: res.data.message
+                    })
+                }
             }
+            
         });
     }
 }
@@ -124,7 +133,9 @@ export const actDeleteDetailPromotionReq = (promotionId, MA_DSP) => {
     }
     return async () => {
         return await callApi(`detailPromotion`, 'DELETE', detailPromotion, `Bearer ${getTokenEmployee()}`).then(res => {
-            return res.data
+            if(res!=null){
+                return res.data
+            }
         });
     }
 }

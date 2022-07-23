@@ -8,7 +8,7 @@ import { getTokenEmployee } from './getNV';
 export const actFetchEmployeesRequest = () => {
     return async (dispatch) => {
         return await callApi('employee', 'GET', null, `Bearer ${getTokenEmployee()}`).then(res => {
-            dispatch(actFetchEmployee(res.data));
+            if (res != null) dispatch(actFetchEmployee(res.data));
         });
     }
 }
@@ -23,7 +23,7 @@ export const actFetchEmployee = (employee) => {
 export const actAddemployeeRequest = (employee) => {
     return async () => {
         return await callApi('employee', 'POST', employee, `Bearer ${getTokenEmployee()}`).then(res => {
-            return res.data
+            if (res != null) return res.data
         });
     }
 }
@@ -31,7 +31,7 @@ export const actAddemployeeRequest = (employee) => {
 export const actUpdateemployeeRequest = (employee, history) => {
     return async (dispatch) => {
         return await callApi(`employee`, 'PUT', employee, `Bearer ${getTokenEmployee()}`).then(res => {
-            return res.data
+            if (res != null) return res.data
         });
     }
 }
@@ -39,8 +39,11 @@ export const actUpdateemployeeRequest = (employee, history) => {
 export const actDeleteemployeeRequest = (id) => {
     return async (dispatch) => {
         return await callApi(`employee/${id}`, 'DELETE', null, `Bearer ${getTokenEmployee()}`).then(res => {
-            if(res.data.result) dispatch(actDeleteEmployee(id))
-            return res.data
+            if (res != null) {
+                if (res.data.result) dispatch(actDeleteEmployee(id))
+                return res.data
+            }
+
         });
     }
 }

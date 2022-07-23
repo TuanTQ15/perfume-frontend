@@ -28,13 +28,14 @@ function random_rgba() {
 
 
 export default function App() {
-    const [year, setYear] = useState(2021)
+    const [year, setYear] = useState(2022)
 
     const [methodStatistic, setMethodStatistic] = useState("nam")
 
     const [labelList, setLabelList] = useState([])
 
     const [revenue, setRevenue] = useState('')
+    const [isDisplay, setIsDisplay] = useState(false)
     const [data, setData] = useState({})
 
     const [dateStatistic, setDateStatistic] = useState({
@@ -53,7 +54,7 @@ export default function App() {
             setData({
                 labels: labelList.splice(0, revenue.length),
                 datasets: [{
-                    label: 'Doanh thu',
+                    label: 'Lợi nhuận',
                     data: revenue,
                     backgroundColor: color,
                     borderColor: color,
@@ -70,15 +71,15 @@ export default function App() {
                 return res.data
             });
             console.log(result)
-            if(result.result === false){
+            if (result.result === false) {
                 MySwal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: result.message
-                  })
+                })
                 return
             }
-            
+
             const arrayListLabel = []
             const temp = JSON.parse(JSON.stringify(dateStatistic))
             for (let d = new Date(temp.dateStart); d <= new Date(temp.dateEnd); d.setDate(d.getDate() + 1)) {
@@ -96,6 +97,7 @@ export default function App() {
             setLabelList(monthList)
             setRevenue(result)
         }
+        setIsDisplay(true)
     }
 
     const renderByMethodStatistic = () => {
@@ -108,8 +110,11 @@ export default function App() {
                         value={year}
                         className="custom-select custom-select-sm form-control form-control-sm"
                         style={{ width: 150 }}>
+                        <option value="2019">2019</option>
                         <option value="2020">2020</option>
                         <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+
                     </select>
                 </div>
             </>
@@ -144,7 +149,7 @@ export default function App() {
                     <TopBar />
                     <div className="py-3 mb-20" >
                         <h3 className="m-0 font-weight-bold text-primary" style={{ textAlign: 'center' }}>
-                            Thống kê lợi nhuận
+                            Thống Kê Lợi Nhuận
                         </h3>
                     </div>
 
@@ -175,8 +180,8 @@ export default function App() {
 
 
                     {/* <Line data={data} style={{ padding: 50 }} /> */}
-                    <ChartProfit data={data} options={options} />
-                    <p className="text-center text-danger" style={{ fontSize: 22 }}>Biểu đồ thống kê lợi nhuận</p>
+                    {isDisplay && <ChartProfit data={data} options={options} />}
+                    
                 </div>
             </div>
         </div>

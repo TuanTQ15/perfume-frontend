@@ -100,16 +100,7 @@ export const ShippingCompany = ({ onFetchShippingCompany, ShippingCompany }) => 
                                     <th className="col-md-1">Action</th>
                                 </tr>
                             </thead>
-                            <tfoot>
-                                <tr>
-                                    <th className="col-md-1">Mã Hãng</th>
-                                    <th className="col-md-3">Tên Hãng</th>
-                                    <th className="col-md-3">Địa chỉ</th>
-                                    <th className="col-md-2">Số điện thoại</th>
-                                    <th className="col-md-2">Email</th>
-                                    <th className="col-md-1">Action</th>
-                                </tr>
-                            </tfoot>
+                            
                             <tbody>
                                 {ShippingCompanyList}
                             </tbody>

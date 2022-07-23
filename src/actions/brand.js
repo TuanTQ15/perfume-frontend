@@ -7,7 +7,11 @@ import { getTokenEmployee } from './getNV';
 export const actFetchBrandsRequest = () => {
     return async (dispatch) => {
         return await callApi('brand', 'GET', null, null).then(res => {
-            dispatch(actFetchBrands(res.data));
+            if (res != null) {
+                dispatch(actFetchBrands(res.data));
+            }
+
+           
         });
     }
 }
@@ -24,7 +28,10 @@ export const actFetchBrands = (brand) => {
 export const actAddBrandRequest = (Brand) => {
     return async (dispatch) => {
         return await callApi('brand', 'POST', Brand, `Bearer ${getTokenEmployee()}`).then(res => {
-            return res.data
+            if (res != null) {
+                return res.data
+            }
+            
         });
     }
 }
@@ -32,7 +39,10 @@ export const actAddBrandRequest = (Brand) => {
 export const actUpdateBrandRequest = (Brand) => {
     return async (dispatch) => {
         return await callApi(`brand`, 'PUT', Brand, `Bearer ${getTokenEmployee()}`).then(res => {
-            return res.data
+            if (res != null) {
+                return res.data
+            }
+            
         });
     }
 }
@@ -40,10 +50,13 @@ export const actUpdateBrandRequest = (Brand) => {
 export const actDeleteBrandRequest = (brandId) => {
     return async (dispatch) => {
         return await callApi(`brand/${brandId}`, 'DELETE', null, `Bearer ${getTokenEmployee()}`).then(res => {
-            if (res.data.result === 1) {
-                dispatch(actDeleteBrand(brandId));
+            if (res != null) {
+                if (res.data.result === 1) {
+                    dispatch(actDeleteBrand(brandId));
+                }
+                return res.data
             }
-            return res.data
+
         });
     }
 }

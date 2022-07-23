@@ -99,17 +99,7 @@ export const Shipper = ({ onFetchShipper, Shipper }) => {
                                     <th className="col-md-1">Action</th>
                                 </tr>
                             </thead>
-                            <tfoot>
-                                <tr>
-                                    <th className="col-md-1">Mã NVGH</th>
-                                    <th className="col-md-2">Họ và tên</th>
-                                    <th className="col-md-2">Ngày sinh</th>
-                                    <th className="col-md-2">Số điện thoại</th>
-                                    <th className="col-md-2">Email</th>
-                                    <th className="col-md-2">Mã CTVC</th>
-                                    <th className="col-md-1">Action</th>
-                                </tr>
-                            </tfoot>
+                           
                             <tbody>
                                 {ShipperList}
                             </tbody>

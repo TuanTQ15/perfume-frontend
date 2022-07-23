@@ -60,7 +60,9 @@ export const ShipperActionPage = ({ match, onUpdateShipper, history, onAddShippe
         if (getAge(shipper.dateOfBirth) < 18) {
             msg.dateOfBirth = "Nhân viên cần trên 18 tuổi"
         }
-
+        if(isEmpty(shipper.phoneNumber)){
+            msg.phoneNumber="Số điện thoại không được để trống"
+        }
         if (isEmpty(shipper.email)) {
             msg.email = "Trường này không được để trống"
         } else if (!isemail(shipper.email)) {

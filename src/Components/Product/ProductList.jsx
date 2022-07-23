@@ -107,17 +107,7 @@ export const ProductList = (props) => {
                                     <th className="col-md-1">Action</th>
                                 </tr>
                             </thead>
-                            <tfoot>
-                                <tr>
-                                    <th className="col-md-1">Mã SP</th>
-                                    <th className="col-md-1">Dung tích</th>
-                                    <th className="col-md-2">Giá</th>
-                                    <th className="col-md-2">Số lượng tồn</th>
-                                    <th className="col-md-1">Mã DSP</th>
-                                    <th className="col-md-4">Tên</th>
-                                    <th className="col-md-1">Action</th>
-                                </tr>
-                            </tfoot>
+                           
                             <tbody>
                                 {productList}
                             </tbody>

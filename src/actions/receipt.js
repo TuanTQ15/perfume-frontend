@@ -12,7 +12,9 @@ const MySwal = withReactContent(Swal)
 export const actFetchReceiptReq = () => {
     return async (dispatch) => {
         return await callApi('receipt', 'GET', null, `Bearer ${getTokenEmployee()}`).then(res => {
-            dispatch(actFetchReceipt(res.data));
+            if (res != null) {
+                dispatch(actFetchReceipt(res.data));
+            }
         });
     }
 }
@@ -27,32 +29,36 @@ export const actFetchReceipt = (receipt) => {
 export const actAddReceiptRequest = (receipt, history, order) => {
     return async (dispatch) => {
         let res = await callApi('receipt', 'POST', receipt, `Bearer ${getTokenEmployee()}`).then(res => {
-            // console.log(employee)
-            // console.log(res.data)
 
-            return res
-        });
-        if (res.data.result) {
-            MySwal.fire({
-                icon: 'success',
-                title: 'Thêm phiếu nhập thành công',
-                showConfirmButton: false,
-                timer: 1500
-            })
-            var orderSupply = {
-                ...order,
-                status : 1
+            if (res != null) {
+                return res
             }
-            let respone = await dispatch(actUpdateOrderSupplyRequest(orderSupply, history, true));
-            if (respone.result) history.goBack()
+
+        });
+        if (res != null) {
+            if (res.data.result) {
+                MySwal.fire({
+                    icon: 'success',
+                    title: 'Thêm phiếu nhập thành công',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                var orderSupply = {
+                    ...order,
+                    status: 1
+                }
+                let respone = await dispatch(actUpdateOrderSupplyRequest(orderSupply, history, true));
+                if (respone.result) history.goBack()
+            }
+            else {
+                MySwal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: res.data.message
+                })
+            }
+            return res
         }
-        else {
-            MySwal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: res.data.message
-            })
-        }
-        return res
+
     }
 }

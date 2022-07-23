@@ -28,7 +28,7 @@ function random_rgba() {
 
 
 export default function App() {
-    const [year, setYear] = useState(2021)
+    const [year, setYear] = useState(2022)
 
     const [methodStatistic, setMethodStatistic] = useState("nam")
 
@@ -36,7 +36,7 @@ export default function App() {
 
     const [revenue, setRevenue] = useState('')
     const [data, setData] = useState({})
-
+    const [isDisplay, setIsDisplay] = useState(false)
     const [dateStatistic, setDateStatistic] = useState({
         dateStart: new Date(),
         dateEnd: new Date()
@@ -69,15 +69,16 @@ export default function App() {
             const result = await callApi(`statistic/revenue/date?date-start=${dateStatistic.dateStart.getTime()}&date-end=${dateStatistic.dateEnd.getTime()}`, 'GET', null, `Bearer ${getTokenEmployee()}`).then(res => {
                 return res.data
             });
-            if(result.result === false){
+
+            if (result.result === false) {
                 MySwal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: result.message
-                  })
+                })
                 return
             }
-            
+
             const arrayListLabel = []
             const temp = JSON.parse(JSON.stringify(dateStatistic))
             for (let d = new Date(temp.dateStart); d <= new Date(temp.dateEnd); d.setDate(d.getDate() + 1)) {
@@ -91,9 +92,11 @@ export default function App() {
             const result = await callApi(`statistic/revenue/year?year=${year}`, 'GET', null, `Bearer ${getTokenEmployee()}`).then(res => {
                 return res.data
             });
+            console.log(result)
             setLabelList(monthList)
             setRevenue(result)
         }
+        setIsDisplay(true)
     }
 
     const renderByMethodStatistic = () => {
@@ -106,8 +109,10 @@ export default function App() {
                         value={year}
                         className="custom-select custom-select-sm form-control form-control-sm"
                         style={{ width: 150 }}>
+                        <option value="2019">2019</option>
                         <option value="2020">2020</option>
                         <option value="2021">2021</option>
+                        <option value="2022">2022</option>
                     </select>
                 </div>
             </>
@@ -142,7 +147,7 @@ export default function App() {
                     <TopBar />
                     <div className="py-3 mb-20" >
                         <h3 className="m-0 font-weight-bold text-primary" style={{ textAlign: 'center' }}>
-                            Thống kê doanh thu
+                            Thống Kê Doanh Thu
                         </h3>
                     </div>
 
@@ -173,8 +178,8 @@ export default function App() {
 
 
                     {/* <Line data={data} style={{ padding: 50 }} /> */}
-                    <Chart data={data} options={options} />
-                    <p className="text-center text-danger" style={{ fontSize: 22 }}>Biểu đồ thống kê doanh thu</p>
+                    {isDisplay && <Chart data={data} options={options}  />}
+                    
                 </div>
             </div>
         </div>

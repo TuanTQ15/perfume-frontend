@@ -102,16 +102,7 @@ export const Promotion = ({ promotion, onFetchPromotion }) => {
                                     <th className="col-md-2">Action</th>
                                 </tr>
                             </thead>
-                            <tfoot>
-                                <tr>
-                                    <th className="col-md-1">Mã KM</th>
-                                    <th className="col-md-3">Tên KM</th>
-                                    <th className="col-md-2">Ngày BĐ</th>
-                                    <th className="col-md-2">Ngày KT</th>
-                                    <th className="col-md-1">Mã NV</th>
-                                    <th className="col-md-2">Action</th>
-                                </tr>
-                            </tfoot>
+                            
                             <tbody>
                                 {productList}
                             </tbody>

@@ -105,17 +105,7 @@ const OrderSupply = ({ orderSupply, onFetchOrderSupply }) => {
                                     <th className="col-md-2">Action</th>
                                 </tr>
                             </thead>
-                            <tfoot>
-                                <tr>
-                                    <th className="col-md-1">Mã DDH</th>
-                                    <th className="col-md-2">Ngày đặt</th>
-                                    <th className="col-md-2">Ngày nhận hàng</th>
-                                    <th className="col-md-1">Trạng thái</th>
-                                    <th className="col-md-2">Mã hãng</th>
-                                    <th className="col-md-1">Mã NV</th>
-                                    <th className="col-md-2">Action</th>
-                                </tr>
-                            </tfoot>
+                           
                             <tbody>
                                 {orderSupplyList}
                             </tbody>
