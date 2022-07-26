@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-function NavigationSwitchPage(props) {
+function NavigationSwitchPageStatistic(props) {
     var { entries } = props
     const [current, setcurrent] = useState(0)
     var pages = Math.floor((entries / 10) + 1)
@@ -33,10 +33,10 @@ function NavigationSwitchPage(props) {
     }
 
     return (
-        <div className="row" style={{ marginBottom: 20 }}>
+        <div className="row" style={{ marginBottom: 20, marginRight:90}}>
             <div className="col-sm-12 col-md-5">
                 <div className="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
-                    Hiện 1 đến 10 of {props.entries} sản phẩm
+                    
                 </div>
             </div>
             <div className="col-sm-12 col-md-7 d-flex justify-content-end">
@@ -64,4 +64,4 @@ function NavigationSwitchPage(props) {
     )
 }
 
-export default NavigationSwitchPage
+export default NavigationSwitchPageStatistic

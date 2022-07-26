@@ -15,6 +15,7 @@
     "chart.js": "^3.5.1",
     "dotenv": "^10.0.0",
     "env-cmd": "^10.1.0",
+    "file-saver": "^2.0.5",
     "jwt-decode": "^3.1.2",
     "node-sass": "^5.0.0",
     "qs": "^6.10.1",
@@ -36,6 +37,7 @@
     "uuid": "^8.3.2",
     "validator": "^13.6.0",
     "web-vitals": "^1.0.1",
+    "xlsx": "^0.18.5",
     "yup": "^0.32.9"
   },
   "scripts": {

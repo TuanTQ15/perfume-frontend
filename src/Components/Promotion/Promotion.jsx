@@ -38,7 +38,7 @@ export const Promotion = ({ promotion, onFetchPromotion }) => {
         return null
     })
 
-    console.log(promotion)
+    
     return (
         <div className="container-fluid">
 
@@ -79,7 +79,7 @@ export const Promotion = ({ promotion, onFetchPromotion }) => {
                             <div className="container">
                                 <div id="dataTable_filter" className="dataTables_filter">
                                     <label className="d-flex flex-row">
-                                        <div className="px-2">Search:</div>
+                                        <div className="px-2">Tìm kiếm:</div>
                                         <input type="search" className="form-control form-control-sm" aria-controls="dataTable" placeholder="" onChange={(e) => setfilter(e.target.value)} />
                                     </label>
                                 </div>
@@ -94,12 +94,12 @@ export const Promotion = ({ promotion, onFetchPromotion }) => {
                         <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
                             <thead>
                                 <tr>
-                                    <th className="col-md-1">Mã KM</th>
-                                    <th className="col-md-3">Tên KM</th>
-                                    <th className="col-md-2">Ngày BĐ</th>
-                                    <th className="col-md-2">Ngày KT</th>
-                                    <th className="col-md-1">Mã NV</th>
-                                    <th className="col-md-2">Action</th>
+                                    <th className="col-md-1">Mã khuyến mãi</th>
+                                    <th className="col-md-3">Tên khuyến mãi</th>
+                                    <th className="col-md-2">Ngày bắt đầu</th>
+                                    <th className="col-md-2">Ngày kết thúc</th>
+                                    <th className="col-md-1">Mã nhân viên</th>
+                                    <th className="col-md-2">Hành động</th>
                                 </tr>
                             </thead>
                             

@@ -63,7 +63,7 @@ const LineProductList = ({ products, onFetchProduct, lineProduct, onFetchLinePro
         <div className="container-fluid">
 
             {/* <!-- Page Heading --> */}
-            <h1 className="h3 mb-2 text-gray-800">Dòng sản phẩm</h1>
+            <h1 className="h3 mb-2 text-gray-800">Sản phẩm</h1>
 
             {/* <!-- DataTales Example --> */}
             <div className="card shadow mb-4">
@@ -89,7 +89,7 @@ const LineProductList = ({ products, onFetchProduct, lineProduct, onFetchLinePro
                                         <option value="100">100</option> */}
                                         </select>
                                     </span>
-                                    <span className="px-2">dòng sản phẩm</span>
+                                    <span className="px-2">Sản phẩm</span>
                                 </label>
                             </div>
                         </div>

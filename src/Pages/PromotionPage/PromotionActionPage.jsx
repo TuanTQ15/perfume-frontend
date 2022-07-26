@@ -12,25 +12,6 @@ import { actAddPromotionRequest, actDeleteDetailPromotionReq, actUpdatePromotion
 import { getTokenEmployee } from './../../actions/getNV'
 import { v4 as uuidv4 } from 'uuid'
 
-
-
-// const { v4: uuidv4 } = require('uuid');
-// const uuidv4 = require("uuid/v4")
-
-// import { SortableContainer, SortableElement } from 'react-sortable-hoc';
-// import arrayMove from 'array-move';
-
-// const SortableItem = SortableElement(({ value }) => <li>{value}</li>);
-
-// const SortableList = SortableContainer(({ items }) => {
-//   return (
-//     <ul>
-//       {items.map((value, index) => (
-//         <SortableItem key={`item-${value}`} index={index} value={value} />
-//       ))}
-//     </ul>
-//   );
-// });
 const MySwal = withReactContent(Swal)
 
 export const PromotionActionPage = ({ match, onFetchEmployee, onAddPromotion, history, onUpdatePromotion, onDelDetailPromotion }) => {
@@ -44,13 +25,14 @@ export const PromotionActionPage = ({ match, onFetchEmployee, onAddPromotion, hi
     promotionName: '',
     startDate: new Date(),
     endDate: new Date(new Date().setDate(new Date().getDate() + 1)),
-    // MA_NV: getNV(history).actort,
+    
     description: "",
     detailPromotionList: [
       {
         id: uuidv4(),
         promotionId: null,
         productId: "",
+        dateCreated: new Date(),
         percentDiscount: "",
         checkForAdd: true,
       }
@@ -95,6 +77,7 @@ export const PromotionActionPage = ({ match, onFetchEmployee, onAddPromotion, hi
           id: uuidv4(),
           promotionId: null,
           productId: "",
+          dateCreated: new Date(),
           percentDiscount: "",
           checkForAdd: true
         }

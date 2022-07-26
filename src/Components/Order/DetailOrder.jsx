@@ -87,7 +87,7 @@ const Modal = ({ isShowing, hide, item }) => isShowing ? ReactDOM.createPortal(
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="d-flex justify-conproductNamet-between footer p-3"> <span>Need Help? visit our <a href="/#"> help center</a></span> <span>{formatDate(new Date(item.bookingDate))}</span> </div>
+                                    <div className="d-flex justify-conproductNamet-between footer p-3"> <span><a href="/#"></a></span> <span >{formatDate(new Date(item.bookingDate))}</span> </div>
                                 </div>
                             </div>
                         </div>

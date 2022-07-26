@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import SideBar from "../../../Components/Bar/SideBar";
 import TopBar from "../../../Components/Bar/TopBar";
 import callApi from "../../../utils/apiCaller";
@@ -6,9 +6,13 @@ import { getTokenEmployee } from "../../../actions/getNV";
 import { formatDate } from "../../../utils/formatDate";
 import ReactDatePicker from "react-datepicker";
 import ChartProfit from "./ChartProfit";
-
+import NavigationSwitchPageStatistic from '../../../Components/Navigation/NavigationSwitchPageStatistic'
 import Swal from 'sweetalert2'
+import { saveAs } from 'file-saver'
 import withReactContent from 'sweetalert2-react-content'
+import NumberFormat from 'react-number-format'
+const XLSX = require('xlsx');
+
 const MySwal = withReactContent(Swal)
 const options = {
     scales: {
@@ -30,7 +34,7 @@ function random_rgba() {
 export default function App() {
     const [year, setYear] = useState(2022)
 
-    const [methodStatistic, setMethodStatistic] = useState("nam")
+    const [methodStatistic, setMethodStatistic] = useState("thang")
 
     const [labelList, setLabelList] = useState([])
 
@@ -42,7 +46,9 @@ export default function App() {
         dateStart: new Date(),
         dateEnd: new Date()
     })
-
+    const [labelMethod, setLabelMethod] = useState("Năm")
+    const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    const EXCEL_EXTENSION = '.xlsx';
     const monthList = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12']
 
     useEffect(() => {
@@ -68,40 +74,62 @@ export default function App() {
         e.preventDefault()
         if (methodStatistic === 'ngay') {
             const result = await callApi(`statistic/profit/date?date-start=${dateStatistic.dateStart.getTime()}&date-end=${dateStatistic.dateEnd.getTime()}`, 'GET', null, `Bearer ${getTokenEmployee()}`).then(res => {
-                return res.data
+                if (res != null) {
+                    return res.data
+                }
             });
-            console.log(result)
-            if (result.result === false) {
+            if (result) {
+                if (result.result === false) {
+                    MySwal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: result.message
+                    })
+                    return
+                }
+
+                const arrayListLabel = []
+                const temp = JSON.parse(JSON.stringify(dateStatistic))
+                for (let d = new Date(temp.dateStart); d <= new Date(temp.dateEnd); d.setDate(d.getDate() + 1)) {
+                    const strDate = formatDate(d)
+                    arrayListLabel.push(strDate)
+                }
+                console.log(arrayListLabel)
+                setLabelList(arrayListLabel)
+                setRevenue(result)
+            }
+            else {
                 MySwal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: result.message
+                    text: "Không thể thống kê vui lòng kiểm tra lại máy chủ"
+                })
+                return
+            }
+        } else {
+            const result = await callApi(`statistic/profit/year?year=${year}`, 'GET', null, `Bearer ${getTokenEmployee()}`).then(res => {
+                if (res != null) {
+                    return res.data
+                }
+            });
+            if (result) {
+                setLabelList(monthList)
+                setRevenue(result)
+            }else{
+                MySwal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "Không thể thống kê vui lòng kiểm tra lại máy chủ"
                 })
                 return
             }
 
-            const arrayListLabel = []
-            const temp = JSON.parse(JSON.stringify(dateStatistic))
-            for (let d = new Date(temp.dateStart); d <= new Date(temp.dateEnd); d.setDate(d.getDate() + 1)) {
-                const strDate = formatDate(d)
-                arrayListLabel.push(strDate)
-            }
-            console.log(arrayListLabel)
-            setLabelList(arrayListLabel)
-            setRevenue(result)
-        } else {
-            const result = await callApi(`statistic/profit/year?year=${year}`, 'GET', null, `Bearer ${getTokenEmployee()}`).then(res => {
-                return res.data
-            });
-            console.log(result)
-            setLabelList(monthList)
-            setRevenue(result)
         }
         setIsDisplay(true)
     }
 
     const renderByMethodStatistic = () => {
-        if (methodStatistic === "nam") {
+        if (methodStatistic === "thang") {
             return <>
                 <div className="form-group">
                     <label htmlFor="">Năm:&nbsp;&nbsp;</label>
@@ -110,8 +138,7 @@ export default function App() {
                         value={year}
                         className="custom-select custom-select-sm form-control form-control-sm"
                         style={{ width: 150 }}>
-                        <option value="2019">2019</option>
-                        <option value="2020">2020</option>
+
                         <option value="2021">2021</option>
                         <option value="2022">2022</option>
 
@@ -141,6 +168,127 @@ export default function App() {
             </>
         }
     }
+
+    useEffect(() => {
+        if (methodStatistic === 'nam') {
+            setLabelMethod("Năm")
+        } else if (methodStatistic === 'thang') {
+            setLabelMethod("Tháng")
+        } else {
+            setLabelMethod("Ngày")
+        }
+    }, [methodStatistic])
+    const [pages, setPages] = useState(1)
+
+    var revenueList = revenue && revenue.map((item, index) => {
+        if (methodStatistic === 'thang') {
+
+            return (
+                <tr>
+                    <td> {monthList[index]}</td>
+                    <td><NumberFormat displayType="text" thousandSeparator={true} value={item}  /></td>
+                </tr>
+            )
+        } else {
+            const arrayListLabel = []
+            const temp = JSON.parse(JSON.stringify(dateStatistic))
+            for (let d = new Date(temp.dateStart); d <= new Date(temp.dateEnd); d.setDate(d.getDate() + 1)) {
+                const strDate = formatDate(d)
+                arrayListLabel.push(strDate)
+            }
+
+            if (index >= (pages - 1) * 10 && index < pages * 10) {
+                return (
+                    <tr>
+                        <td>{arrayListLabel[index]}</td>
+                        <td><NumberFormat displayType="text" thousandSeparator={true} value={item}/></td>
+                    </tr>
+                )
+            }
+
+        }
+        return null
+    })
+
+
+
+    function saveAsExcel(buffer, filename) {
+        const data = new Blob([buffer], { type: EXCEL_TYPE });
+
+        saveAs(data, filename + '_export_' + new Date().getTime() + EXCEL_EXTENSION)
+    }
+
+    const handleDownload = () => {
+        var dataSet = []
+        revenue && revenue.map((item, index) => {
+            if (methodStatistic === 'thang') {
+                const object = {
+                    "Tháng": monthList[index],
+                    "Doanh thu": item
+                }
+                dataSet.push(object)
+            }
+            else {
+                const arrayListLabel = []
+                const temp = JSON.parse(JSON.stringify(dateStatistic))
+                for (let d = new Date(temp.dateStart); d <= new Date(temp.dateEnd); d.setDate(d.getDate() + 1)) {
+                    const strDate = formatDate(d)
+                    arrayListLabel.push(strDate)
+                }
+                const object = {
+                    "Ngày": arrayListLabel[index],
+                    "Doanh thu": item
+                }
+                dataSet.push(object)
+            }
+        })
+
+        const worksheet = XLSX.utils.json_to_sheet(dataSet);
+        const workbook = {
+            Sheets: {
+                'data': worksheet
+            },
+            SheetNames: ['data']
+        };
+        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+        saveAsExcel(excelBuffer, 'profit');
+
+    }
+    const tableDataRevenue = useMemo(() => {
+        return (
+            <div className="card-body" style={{ padding: 70, marginLeft: 47 }}>
+                <div className="table-responsive">
+                    <table className="table table-bordered table-striped mb-0" id="dataTable" width="100%" cellSpacing="0">
+                        <thead>
+                            <tr>
+                                <th className="col-md-1">{labelMethod}</th>
+
+                                <th className="col-md-3">Lợi Nhuận</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {revenueList}
+                        </tbody>
+                    </table>
+
+                </div>
+                <div>
+                    <button onClick={handleDownload} style={{
+                        marginBottom: 100,
+                        marginRight: 110,
+                        right: 0,
+                        bottom: 0,
+                        width: 100,
+                        position: "absolute",
+                    }}
+                    >Export</button>
+                </div>
+            </div>)
+
+    })
+
     return (
         <div id="wrapper">
             <SideBar />
@@ -161,7 +309,7 @@ export default function App() {
                                 value={methodStatistic}
                                 className="custom-select custom-select-sm form-control form-control-sm"
                                 style={{ width: 150 }}>
-                                <option value="nam">Năm</option>
+                                <option value="thang">Tháng</option>
                                 <option value="ngay">Ngày</option>
                             </select>
                         </div>
@@ -181,7 +329,10 @@ export default function App() {
 
                     {/* <Line data={data} style={{ padding: 50 }} /> */}
                     {isDisplay && <ChartProfit data={data} options={options} />}
-                    
+                    {isDisplay && tableDataRevenue}
+
+
+                    {isDisplay && <NavigationSwitchPageStatistic entries={revenue.length} onReceivePage={p => setPages(p)} />}
                 </div>
             </div>
         </div>
