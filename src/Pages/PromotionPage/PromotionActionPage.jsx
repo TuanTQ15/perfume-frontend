@@ -17,7 +17,7 @@ const MySwal = withReactContent(Swal)
 export const PromotionActionPage = ({ match, onFetchEmployee, onAddPromotion, history, onUpdatePromotion, onDelDetailPromotion }) => {
   //state check kiểm tra là thêm hay sửa
   const [checkAdd, setcheckAdd] = useState(true)
-
+  const [disable, setDisable] = useState(true)
   const [validationMsg, setvalidationMsg] = useState('')
   const [validationMsgCT_DDH, setvalidationMsgCT_DDH] = useState([])
   const [value, setValue] = useState({
@@ -25,7 +25,7 @@ export const PromotionActionPage = ({ match, onFetchEmployee, onAddPromotion, hi
     promotionName: '',
     startDate: new Date(),
     endDate: new Date(new Date().setDate(new Date().getDate() + 1)),
-    
+
     description: "",
     detailPromotionList: [
       {
@@ -207,21 +207,28 @@ export const PromotionActionPage = ({ match, onFetchEmployee, onAddPromotion, hi
     }
     // console.log(value);
   }
-  // const [keyWord, setKeyWord] = useState("")
-  // const arrayTest = [
-  //   {
-  //     value: 1,
-  //     name: "small"
-  //   },
-  //   {
-  //     value: 2,
-  //     name: "medium"
-  //   },
-  //   {
-  //     value: 3,
-  //     name: "large"
-  //   }
-  // ]
+  async function checkForDelete (productId)  {
+  
+    return await callApi(`promotion/check_delete/${productId}`, 'GET', null, `Bearer ${getTokenEmployee()}`).then(res => {
+      console.log(res)
+      if (res != null) {
+        if (!res.data.result) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        return true
+      }
+
+    });
+  }
+  checkForDelete(3).then(data => {
+    setDisable(data)
+  }).catch(err => {
+    setDisable(true)
+  });
+
   return (
 
     <div id="wrapper" >
@@ -230,34 +237,20 @@ export const PromotionActionPage = ({ match, onFetchEmployee, onAddPromotion, hi
         <div id="content">
           <TopBar history={history} />
           <div className="container" >
-            {/* style ={{marginLeft: 220}} */}
-
 
             <div className="py-3 mb-20" >
               <h3 className="m-0 font-weight-bold text-primary" style={{ textAlign: 'center' }}>
                 {checkAdd ? "Thêm đợt khuyến mãi" : "Sửa đợt khuyến mãi"}
               </h3>
             </div>
-
-
             <form onSubmit={e => handleSubmit(e)} style={{ marginBottom: 200 }}>
-              {/* <SortableList items={this.state.items} onSortEnd={this.onSortEnd} /> */}
-              {/* Mã dòng sản phẩm  */}
-              {/* <div className="form-group">
-                <label className="control-label" htmlFor="promotionId">Mã khuyến mãi(<small className="text-danger">*</small>)</label>
-                <input id="promotionId" onChange={checkAdd ? e => setValue({ ...value, promotionId: e.target.value }) : null} readOnly={checkAdd ? '' : 'readOnly'}
-                  value={value.promotionId} name="promotionId" placeholder="Mã Khuyến mãi" className="form-control input-md" required="" type="text" />
-                <small className="form-text text-danger">{validationMsg.promotionId}</small>
-              </div> */}
 
-              {/* Tên */}
               <div className="form-group">
                 <label className=" control-label" htmlFor="promotionName">Tên khuyến mãi(<small className="text-danger">*</small>)</label>
                 <input id="promotionName" onChange={e => setValue({ ...value, promotionName: e.target.value })} value={value.promotionName} name="promotionName" placeholder="Tên khuyến mãi" className="form-control input-md" required="" type="text" />
                 <small className="form-text text-danger">{validationMsg.promotionName}</small>
               </div>
 
-              {/* Độ lưu hương */}
               <div className="form-group">
                 <label value={value.startDate} className=" control-label" htmlFor="XUATXU">Ngày bắt đầu(<small className="text-danger">*</small>)</label>
                 <ReactDatePicker
@@ -268,19 +261,16 @@ export const PromotionActionPage = ({ match, onFetchEmployee, onAddPromotion, hi
                 />
                 <small className="form-text text-danger">{validationMsg.startDate}</small>
               </div>
-
               <div className="form-group">
                 <label value={value.endDate} className=" control-label" htmlFor="XUATXU">Ngày kết thúc(<small className="text-danger">*</small>)</label>
                 <ReactDatePicker
                   selected={new Date(value.endDate)}
                   name="endDate"
                   className="form-control"
-                  onChange={date => setValue({ ...value, endDate: date })} //only when value has changed
+                  onChange={date => setValue({ ...value, endDate: date })}
                 />
                 <small className="form-text text-danger">{validationMsg.endDate}</small>
               </div>
-
-
               {/* Mô tả */}
               <div className="form-group">
                 <label value={value.description} className=" control-label" htmlFor="description">Mô Tả</label>
@@ -306,8 +296,8 @@ export const PromotionActionPage = ({ match, onFetchEmployee, onAddPromotion, hi
 
                 {
                   value.detailPromotionList.map((ct, id) => {
-                    // console.log(validationMsgCT_DDH);
                     let index = validationMsgCT_DDH.findIndex(x => x.id === ct.id)
+                  
                     return <div key={id} className="row" style={{ marginBottom: 15 }}>
                       <div className="col">
                         <input type="number"
@@ -316,21 +306,9 @@ export const PromotionActionPage = ({ match, onFetchEmployee, onAddPromotion, hi
                           name="productId"
                           className="form-control" placeholder="Mã dòng sản phẩm"
                           disabled={checkAdd ? false : (ct.checkForAdd === true ? false : true)} />
-
-                        {/* <SelectSearch
-                          options={countries}
-                          search
-                          onChange={e => handleChangeCTKM(e, ct.id)}
-                          value={ct.productId}
-                          name="productId"
-                          filterOptions={ct.productId}
-                          className="form-control" placeholder="Mã dòng sản phẩm"
-                          disabled={checkAdd ? false : (ct.checkForAdd === true ? false : true)}
-                        /> */}
                         <small className="form-text text-danger">
                           {index === -1 ? "" : validationMsgCT_DDH[index].productId}
                         </small>
-
                       </div>
                       <div className="col">
                         <input type="number"
@@ -340,16 +318,16 @@ export const PromotionActionPage = ({ match, onFetchEmployee, onAddPromotion, hi
                           className="form-control" placeholder="Phần trăm khuyến mãi" />
 
                         <small className="form-text text-danger">
-                          {/* {validationMsgCT_DDH[index] === undefined ? "" : validationMsgCT_DDH[ct.id].percentDiscount} */}
+
                           {index === -1 ? "" : validationMsgCT_DDH[index].percentDiscount}
                         </small>
-                        {/* <small className="form-text text-danger">{validationMsgCT_DDH[index] === undefined ? "" : validationMsgCT_DDH[ct.id].percentDiscount}</small> */}
+
 
                       </div>
 
                       <div className="col">
                         <button onClick={() => handleDeleteCT_DDH(ct)}
-                          // hidden={checkAdd ? false : (ct.checkForAdd === true ? false : true)}
+                          disabled={false}
                           type="button" className="btn btn-danger">
                           <i className="fas fa-trash-alt"></i>&nbsp;Xóa
                         </button>
